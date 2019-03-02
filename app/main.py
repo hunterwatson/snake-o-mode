@@ -40,10 +40,14 @@ def start():
             request's data if necessary.
     """
     print(json.dumps(data))
+    
+    aesthetics = {
+        "color": "#FFD700",
+        "headType": "safe",
+        "tailType": "round-bum"
+    }
 
-    color = "#FFD700"
-
-    return start_response(color)
+    return start_response(aesthetics)
 
 
 @bottle.post('/move')
