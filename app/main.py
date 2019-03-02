@@ -278,7 +278,7 @@ def path(copy_directions, data):
 
     for direction in directions:
         if direction in no_exit_directions:
-            directions.remove(directions)
+            directions.remove(direction)
 
     return directions
 
