@@ -69,16 +69,10 @@ def move():
     enemy_list = board_state["snakes"]
     me = data["you"]
 
-
-    direction = get_dat_grub(food_list, me)
-    # directions = ['up', 'down', 'left', 'right']
-    # direction = random.choice(directions)
-
     reset_directions = ['up', 'down', 'left', 'right']
-    print(reset_directions)
-
+    
     directions = path(reset_directions, data)
-    print(directions)
+    direction = get_dat_grub(food_list, me)
 
     if direction not in directions:
         direction = random.choice(directions)
@@ -86,14 +80,14 @@ def move():
     return move_response(direction)
 
 def get_dat_grub(food_list, me):
-
+    if not food_list:
+        return None
+    
     minfood = food_list[0]
     min_distance = 100
     head = me["body"][0]
     head_x = head["x"]
     head_y = head["y"]
-
-    candidates = []
 
     for food in food_list:
         x = food["x"]
@@ -219,6 +213,14 @@ def check_head(head, no_no_zone, height, width):
     else:
         return True
 
+def avoid_sneks(no_no_zone, data):
+    if data["board"]["snakes"]:
+        for snake in data["board"]["snakes"]:
+            for taken in snake["body"]:
+                no_no_zone.append(taken)
+    
+    return no_no_zone
+
 def path(copy_directions, data):
 
     directions = copy.copy(copy_directions)
@@ -245,14 +247,15 @@ def path(copy_directions, data):
         "y": head["y"],
     }
 
-    no_no_zone = body[1:]
+    no_no_zone = avoid_sneks(body[1:], data)
+
     height = data["board"]["height"]
     width = data["board"]["width"]
 
     DONT_GO = no_exit(data, no_no_zone)
 
     if up_coords in no_no_zone or up_coords["y"] < 0:
-        print("no left")
+        print("no up")
         if "up" in directions:
             directions.remove("up")
 
@@ -267,7 +270,7 @@ def path(copy_directions, data):
             directions.remove("right")
     
     if left_coords in no_no_zone or left_coords["x"] < 0:
-        print("no up")
+        print("no left")
         if "left" in directions:
             directions.remove("left")
 
