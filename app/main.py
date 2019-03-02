@@ -132,6 +132,15 @@ def get_dat_grub(food_list, me):
         else:
             return "up"
 
+
+def avoid_sneks(no_no_zone, data):
+    for snake in data["snakes"]:
+        for taken in snake["body"]:
+            no_no_zone.append(taken)
+    
+    return no_no_zone
+
+
 def path(copy_directions, data):
 
     directions = copy.copy(copy_directions)
@@ -158,7 +167,8 @@ def path(copy_directions, data):
         "y": head["y"],
     }
 
-    no_no_zone = body[1:]
+    no_no_zone = avoid_sneks(body[1:], data)
+
     height = data["board"]["height"]
     width = data["board"]["width"]
 
