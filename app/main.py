@@ -2,6 +2,7 @@ import json
 import os
 import random
 import bottle
+import copy
 
 from api import ping_response, start_response, move_response, end_response
 
@@ -39,11 +40,13 @@ def start():
             initialize your snake state here using the
             request's data if necessary.
     """
-    print(json.dumps(data))
-    print(json.dumps(data["board"]))
-    color = "#00FF00"
+    #print(json.dumps(data))
 
-    return start_response(color)
+    color = "#FFD700"
+    headType = "safe"
+    tailType = "round-bum"
+
+    return start_response(color, headType, tailType)
 
 
 @bottle.post('/move')
@@ -58,7 +61,7 @@ def move():
 
 
     board_state = data["board"]
-    print(board_state)
+    #print(board_state)
     turn = data["turn"]
     food_list = board_state["food"]
     board_width = board_state["width"]
@@ -66,9 +69,19 @@ def move():
     enemy_list = board_state["snakes"]
     me = data["you"]
 
+
     direction = get_dat_grub(food_list, me)
     # directions = ['up', 'down', 'left', 'right']
     # direction = random.choice(directions)
+
+    reset_directions = ['up', 'down', 'left', 'right']
+    print(reset_directions)
+
+    directions = path(reset_directions, data)
+    print(directions)
+
+    if direction not in directions:
+        direction = random.choice(directions)
 
     return move_response(direction)
 
@@ -118,6 +131,58 @@ def get_dat_grub(food_list, me):
             return "down"
         else:
             return "up"
+
+def path(copy_directions, data):
+
+    directions = copy.copy(copy_directions)
+    body = data["you"]["body"]
+    head = body[0]
+    
+    up_coords = {
+        "x": head["x"],
+        "y": head["y"] - 1,
+    }
+
+    down_coords = {
+        "x": head["x"],
+        "y": head["y"] + 1,
+    }
+
+    right_coords = {
+        "x": head["x"] + 1,
+        "y": head["y"],
+    }
+
+    left_coords = {
+        "x": head["x"] - 1,
+        "y": head["y"],
+    }
+
+    no_no_zone = body[1:]
+    height = data["board"]["height"]
+    width = data["board"]["width"]
+
+    if up_coords in no_no_zone or up_coords["y"] < 0:
+        print("no left")
+        if "up" in directions:
+            directions.remove("up")
+
+    if down_coords in no_no_zone or down_coords["y"] >= height:
+        print("no down")
+        if "down" in directions:
+            directions.remove("down")
+    
+    if right_coords in no_no_zone or right_coords["x"] >= width:
+        print("no right")
+        if "right" in directions:
+            directions.remove("right")
+    
+    if left_coords in no_no_zone or left_coords["x"] < 0:
+        print("no up")
+        if "left" in directions:
+            directions.remove("left")
+    
+    return directions
 
 @bottle.post('/end')
 def end():
