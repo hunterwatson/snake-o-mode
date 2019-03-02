@@ -58,7 +58,7 @@ def move():
             snake AI must choose a direction to move in.
     """ 
 
-    directions = ['up', 'down', 'left', 'right']
+    directions = ['up', 'left', 'down', 'right']
     direction = data["turn"]%4
 
     return move_response(directions[direction])
