@@ -69,9 +69,53 @@ def move():
     me = data["you"]
 
     directions = ['up', 'down', 'left', 'right']
-    direction = random.choice(directions)
 
+    directions = path(directions, data)
+    direction = random.choice(directions)
+    
     return move_response(direction)
+
+def path(directions, data):
+    body = data["you"]["body"]
+    head = body[0]
+    
+    up_coords = {
+        "x": head["x"],
+        "y": head["y"] - 1,
+    }
+
+    down_coords = {
+        "x": head["x"],
+        "y": head["y"] + 1,
+    }
+
+    right_coords = {
+        "x": head["x"] + 1,
+        "y": head["y"],
+    }
+
+    left_coords = {
+        "x": head["x"] - 1,
+        "y": head["y"],
+    }
+
+    no_no_zone = body[1:]
+    height = data["board"]["height"]
+    width = data["board"]["width"]
+
+    if (up_coords in no_no_zone and "up" in directions) or up_coords["y"] < 0:
+        directions.remove("up")
+    
+    if (down_coords in no_no_zone and "down" in directions) or down_coords >= height:
+        directions.remove("down")
+    
+    if (right_coords in no_no_zone and "right" in directions) or right_coords >= width:
+        directions.remove("right")
+    
+    if (left_coords in no_no_zone and "left" in directions) or left_coords < 0:
+        directions.remove("left")
+    
+    return directions
 
 
 @bottle.post('/end')
