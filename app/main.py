@@ -69,16 +69,10 @@ def move():
     enemy_list = board_state["snakes"]
     me = data["you"]
 
-
-    direction = get_dat_grub(food_list, me)
-    # directions = ['up', 'down', 'left', 'right']
-    # direction = random.choice(directions)
-
     reset_directions = ['up', 'down', 'left', 'right']
-    print(reset_directions)
-
+    
     directions = path(reset_directions, data)
-    print(directions)
+    direction = get_dat_grub(food_list, me)
 
     if direction not in directions:
         direction = random.choice(directions)
@@ -94,8 +88,6 @@ def get_dat_grub(food_list, me):
     head = me["body"][0]
     head_x = head["x"]
     head_y = head["y"]
-
-    candidates = []
 
     for food in food_list:
         x = food["x"]
