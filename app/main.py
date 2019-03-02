@@ -252,6 +252,8 @@ def path(copy_directions, data):
     height = data["board"]["height"]
     width = data["board"]["width"]
 
+    DONT_GO = no_exit(data, no_no_zone)
+
     if up_coords in no_no_zone or up_coords["y"] < 0:
         print("no up")
         if "up" in directions:
@@ -276,7 +278,7 @@ def path(copy_directions, data):
 
     for direction in directions:
         if direction in no_exit_directions:
-            directions.remove(direction)
+            directions.remove(directions)
 
     return directions
 
