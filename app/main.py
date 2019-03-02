@@ -132,6 +132,93 @@ def get_dat_grub(food_list, me):
         else:
             return "up"
 
+def no_exit(data, no_no_zone):
+
+    me_body = data["you"]["body"]
+    head = me_body[0]
+    second_segment = me_body[1]
+    height = data["board"]["height"]
+    width = data["board"]["width"]
+
+    DONT_GO = []
+
+    up_head = {
+        "x": head["x"],
+        "y": head["y"] - 1,
+    }
+
+    down_head = {
+        "x": head["x"],
+        "y": head["y"] + 1,
+    }
+
+    right_head = {
+        "x": head["x"] + 1,
+        "y": head["y"],
+    }
+
+    left_head = {
+        "x": head["x"] - 1,
+        "y": head["y"],
+    }
+
+    go_left = check_head(left_head, no_no_zone, height, width)
+    go_right = check_head(right_head, no_no_zone, height, width)
+    go_down = check_head(down_head, no_no_zone, height, width)
+    go_up = check_head(up_head, no_no_zone, height, width)
+
+    if not go_up:
+        DONT_GO.append("up")
+    elif not go_down:
+        DONT_GO.append("down")
+    elif not go_right:
+        DONT_GO.append("right")
+    elif not go_left:
+        DONT_GO.append("left")
+
+    return DONT_GO
+
+def check_head(head, no_no_zone, height, width):
+
+    up_coords = {
+        "x": head["x"],
+        "y": head["y"] - 1,
+    }
+
+    down_coords = {
+        "x": head["x"],
+        "y": head["y"] + 1,
+    }
+
+    right_coords = {
+        "x": head["x"] + 1,
+        "y": head["y"],
+    }
+
+    left_coords = {
+        "x": head["x"] - 1,
+        "y": head["y"],
+    }
+
+    count = 0
+
+    if up_coords in no_no_zone or up_coords["y"] < 0:
+        count += 1
+
+    if down_coords in no_no_zone or down_coords["y"] >= height:
+        count += 1
+
+    if right_coords in no_no_zone or right_coords["x"] >= width:
+        count += 1
+
+    if left_coords in no_no_zone or left_coords["x"] < 0:
+        count += 1
+
+    if count == 4:
+        return False
+    else:
+        return True
+
 def path(copy_directions, data):
 
     directions = copy.copy(copy_directions)
@@ -162,6 +249,8 @@ def path(copy_directions, data):
     height = data["board"]["height"]
     width = data["board"]["width"]
 
+    DONT_GO = no_exit(data, no_no_zone)
+
     if up_coords in no_no_zone or up_coords["y"] < 0:
         print("no left")
         if "up" in directions:
@@ -181,7 +270,13 @@ def path(copy_directions, data):
         print("no up")
         if "left" in directions:
             directions.remove("left")
-    
+
+    no_exit_directions = no_exit(data, no_no_zone)
+
+    for direction in directions:
+        if direction in no_exit_directions:
+            directions.remove(directions)
+
     return directions
 
 @bottle.post('/end')
