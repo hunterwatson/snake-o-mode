@@ -40,6 +40,7 @@ def start():
             request's data if necessary.
     """
     print(json.dumps(data))
+<<<<<<< HEAD
     
     aesthetics = {
         "color": "#FFD700",
@@ -48,6 +49,12 @@ def start():
     }
 
     return start_response(aesthetics)
+=======
+
+    color = "#00FF00"
+
+    return start_response(color)
+>>>>>>> parent of d538f72... change colour
 
 
 @bottle.post('/move')
