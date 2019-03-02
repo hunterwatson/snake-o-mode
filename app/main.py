@@ -134,9 +134,10 @@ def get_dat_grub(food_list, me):
 
 
 def avoid_sneks(no_no_zone, data):
-    for snake in data["snakes"]:
-        for taken in snake["body"]:
-            no_no_zone.append(taken)
+    if data["snakes"]:
+        for snake in data["snakes"]:
+            for taken in snake["body"]:
+                no_no_zone.append(taken)
     
     return no_no_zone
 
