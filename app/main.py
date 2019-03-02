@@ -43,8 +43,10 @@ def start():
 
 
     color = "#FFD700"
+    headType = "safe"
+    tailType = "round-bum"
 
-    return start_response(color)
+    return start_response(color, headType, tailType)
 
 
 @bottle.post('/move')
