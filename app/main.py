@@ -134,7 +134,7 @@ def avoid_sneks(no_no_zone, data):
                 no_no_zone.append(taken)
             
             if len(snake["body"]) >= len(data["you"]["body"]):
-                head = snake["body"]
+                head = snake["body"][0]
                 bad = [
                     {
                         "x": head["x"],
