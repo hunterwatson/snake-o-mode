@@ -66,13 +66,58 @@ def move():
     enemy_list = board_state["snakes"]
     me = data["you"]
 
-
-
-    directions = ['up', 'down', 'left', 'right']
-    direction = random.choice(directions)
+    direction = get_dat_grub(food_list, me)
+    # directions = ['up', 'down', 'left', 'right']
+    # direction = random.choice(directions)
 
     return move_response(direction)
 
+def get_dat_grub(food_list, me):
+
+    minfood = food_list[0]
+    min_distance = 100
+    head = me["body"][0]
+    head_x = head["x"]
+    head_y = head["y"]
+
+    candidates = []
+
+    for food in food_list:
+        x = food["x"]
+        y = food["y"]
+        dif_x = head_x - x
+        dif_y = head_y - y
+
+        distance = (dif_x*dif_x) + (dif_y*dif_y)
+        if distance < min_distance:
+            min_distance = distance
+            minfood = food
+
+    target_x = minfood["x"]
+    target_y = minfood["y"]
+
+    dif_x = head_x - target_x
+    dif_y = head_y - target_y
+    if dif_x == 0:
+        if dif_y < 0:
+            return "down"
+        else:
+            return "up"
+    elif dif_y == 0:
+        if dif_x < 0:
+            return "right"
+        else:
+            return "left"
+    if dif_x < dif_y:
+        if(dif_x > 0):
+            return "left"
+        else:
+            return "right"
+    elif dif_y < dif_x:
+        if(dif_y < 0):
+            return "down"
+        else:
+            return "up"
 
 @bottle.post('/end')
 def end():
