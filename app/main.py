@@ -218,28 +218,6 @@ def avoid_sneks(no_no_zone, data):
         for snake in data["board"]["snakes"]:
             for taken in snake["body"]:
                 no_no_zone.append(taken)
-
-                if len(snake["body"]) >= len(data["you"]["body"]):
-                head = snake["body"][0]
-                bad = [
-                    {
-                        "x": head["x"],
-                        "y": head["y"] + 1
-                    },
-                    {
-                        "x": head["x"],
-                        "y": head["y"] - 1
-                    },
-                    {
-                        "x": head["x"] + 1,
-                        "y": head["y"]
-                    },
-                    {
-                        "x": head["x"] - 1,
-                        "y": head["y"]
-                    },
-                ]
-                no_no_zone.extend(bad)
     
     return no_no_zone
 
