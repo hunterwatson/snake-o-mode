@@ -86,7 +86,9 @@ def move():
     return move_response(direction)
 
 def get_dat_grub(food_list, me):
-
+    if not food_list:
+        return None
+    
     minfood = food_list[0]
     min_distance = 100
     head = me["body"][0]
@@ -174,7 +176,7 @@ def path(copy_directions, data):
     width = data["board"]["width"]
 
     if up_coords in no_no_zone or up_coords["y"] < 0:
-        print("no left")
+        print("no up")
         if "up" in directions:
             directions.remove("up")
 
@@ -189,7 +191,7 @@ def path(copy_directions, data):
             directions.remove("right")
     
     if left_coords in no_no_zone or left_coords["x"] < 0:
-        print("no up")
+        print("no left")
         if "left" in directions:
             directions.remove("left")
     
